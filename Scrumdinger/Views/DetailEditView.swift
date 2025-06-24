@@ -49,7 +49,7 @@ struct DetailEditView: View {
                     .disabled(attendeeName.isEmpty)
                 }
             }
-        }
+        }		
     }
 }
 
