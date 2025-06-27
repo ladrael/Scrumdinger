@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct ScrumsView: View {
-    
     @Binding var scrums: [DailyScrum]
+    @State private var ispresentingNewScrumView = false
     
     var body: some View {
         NavigationStack{
@@ -14,13 +14,17 @@ struct ScrumsView: View {
             }
             .navigationTitle("Daily Scrums")    // 뒤로가기시에 이 항목을 나타냄
             .toolbar{
-                Button(action:{}){
+                Button(action:{
+                    ispresentingNewScrumView = true
+                }){
                     Image(systemName: "plus")
                 }
                 .accessibilityLabel("New Scrums")
             }
         }
-        
+        .sheet(isPresented: $ispresentingNewScrumView){
+            
+        }
     }
 }
 
