@@ -12,6 +12,8 @@ struct DetailEditView: View {
     let saveEdits: (DailyScrum) -> Void
     
     @State private var attendeeName = ""
+    @Environment(\.dismiss) private var dismiss     //Environment 속성 래퍼 사용시 뷰의 프레젠테이션 모드, 장면 단계, 가시성 또는 색상 구성표 등 뷰의 환경에 저장된 값 읽기 가능
+        //Action을 dismiss함
     
     var body: some View {
         Form {
@@ -50,11 +52,24 @@ struct DetailEditView: View {
                     .disabled(attendeeName.isEmpty)
                 }
             }
-        }		
+        }
+        .toolbar{
+            ToolbarItem(placement: .cancellationAction){
+                Button("Cancel"){
+                    dismiss()
+                }
+            }
+            ToolbarItem(placement: .confirmationAction){
+                Button("Done"){
+                    saveEdits(scrum)
+                    dismiss()
+                }
+            }
+        }
     }
 }
 
 #Preview {
     @Previewable @State var scrum = DailyScrum.sampleData[0]
-    DetailEditView(scrum : $scrum)
+    DetailEditView(scrum : $scrum, saveEdits: {_ in }) // 클로저에서 파라미터를 사용하지 않을때 언더바를 사용함
 }

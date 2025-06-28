@@ -23,7 +23,7 @@ struct ScrumsView: View {
             }
         }
         .sheet(isPresented: $ispresentingNewScrumView){
-            
+            NewScrumSheet(scrums: $scrums)
         }
     }
 }
@@ -31,5 +31,4 @@ struct ScrumsView: View {
 #Preview {
     @Previewable @State var scrums = DailyScrum.sampleData
     ScrumsView(scrums: $scrums)
-    
 }

@@ -9,6 +9,21 @@ struct MeetingView: View {
     
     private let player = AVPlayer.dingPlayer()
     
+    fileprivate func startScrum() {
+        scrumTimer.reset(lengthInMinutes: scrum.lengthInMinutes, attendeeNames: scrum.attendees.map { $0.name })
+        scrumTimer.speakerChangedAction = {
+            player.seek(to: .zero) // 오디오 파일의 시작 위치 찾기
+            player.play()
+        }
+        scrumTimer.startScrum()
+    }
+    
+    fileprivate func endScrum() {
+        scrumTimer.stopScrum()
+        let newHistory = History(attendees: scrum.attendees)
+        scrum.history.insert(newHistory, at:0)
+    }
+    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16.0)
@@ -23,15 +38,10 @@ struct MeetingView: View {
         .padding()
         .foregroundStyle(scrum.theme.accentColor)
         .onAppear{
-            scrumTimer.reset(lengthInMinutes: scrum.lengthInMinutes, attendeeNames: scrum.attendees.map { $0.name })
-            scrumTimer.speakerChangedAction = {
-                player.seek(to: .zero) // 오디오 파일의 시작 위치 찾기
-                player.play()
-            }
-            scrumTimer.startScrum()
+            startScrum()
         }
         .onDisappear{
-            scrumTimer.stopScrum()
+            endScrum()
         }
         .navigationBarTitleDisplayMode(.inline)
     }
