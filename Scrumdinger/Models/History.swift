@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-struct History : Identifiable{
+class History : Identifiable{
     var id: UUID
     var date: Date
     var attendees: [Attendee]

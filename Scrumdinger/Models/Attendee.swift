@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 @Model
-struct Attendee: Identifiable{
+class Attendee: Identifiable{
     var id : UUID
     var name : String
     var dailyScrum : DailyScrum?

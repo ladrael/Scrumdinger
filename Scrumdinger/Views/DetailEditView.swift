@@ -10,6 +10,7 @@ struct DetailEditView: View {
     @State private var lengthInMinutesAsDouble: Double
     @State private var attendees: [Attendee]
     @State private var theme: Theme
+    @State private var errorWrapper: ErrorWrapper?
     @Environment(\.dismiss) private var dismiss     //Environment 속성 래퍼 사용시 뷰의 프레젠테이션 모드, 장면 단계, 가시성 또는 색상 구성표 등 뷰의 환경에 저장된 값 읽기 가능
         //Action을 dismiss함
     @Environment(\.modelContext) private var context
@@ -80,14 +81,23 @@ struct DetailEditView: View {
             }
             ToolbarItem(placement: .confirmationAction){
                 Button("Done"){
-                    saveEdits()
-                    dismiss()
+                    do{
+                        try saveEdits()
+                        dismiss()
+                    } catch {
+                        errorWrapper = ErrorWrapper(error: error, guidance: "Daily scrum was not recorded. Try again later.")
+                    }
                 }
             }
         }
+        .sheet(item: $errorWrapper){
+            dismiss()
+        } content: { wrapper in
+            ErrorView(errorWrapper: wrapper)
+        }
     }
     
-    private func saveEdits(){
+    private func saveEdits() throws {
         scrum.title = title
         scrum.lengthInMinutesAsDouble = lengthInMinutesAsDouble
         scrum.attendees = attendees
@@ -97,7 +107,7 @@ struct DetailEditView: View {
             context.insert(scrum)
         }
         
-        try? context.save()
+        try context.save()
         
     }
 }
